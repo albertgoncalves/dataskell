@@ -2,8 +2,8 @@
 
 module Payload where
 
-import Data.List (groupBy, sortBy)
 import Data.Function (on)
+import Data.List (groupBy, sortBy)
 import Data.Maybe (listToMaybe)
 import GaussianPDF (mean, std)
 import Utils (mapTuple, seqTuple)
