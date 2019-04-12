@@ -17,5 +17,8 @@ with pkgs; mkShell {
             alias ls='ls --color=auto'
             alias ll='ls -al'
         fi
+        if [ ! -d bin/ ]; then
+            mkdir bin/
+        fi
     '';
 }
