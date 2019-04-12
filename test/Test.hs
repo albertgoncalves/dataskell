@@ -24,17 +24,17 @@ testStd =
         (std n' (1 :: Int) $ replicate n' x)
         (Just 0)
     , assertEqual
-        "std -> Nothing"
-        (std (1 :: Int) (1 :: Int) $ replicate n' x)
-        Nothing
+        "std -> Just 0.8164966"
+        (std (3 :: Int) (0 :: Int) xs)
+        (Just 0.8164966 :: Maybe Float)
     , assertEqual
         "std -> Just 1"
         (std (3 :: Int) (1 :: Int) xs)
         (Just 1 :: Maybe Float)
     , assertEqual
-        "std -> Just 0.8164966"
-        (std (3 :: Int) (0 :: Int) xs)
-        (Just 0.8164966 :: Maybe Float)
+        "std -> Nothing"
+        (std (1 :: Int) (1 :: Int) $ replicate n' x)
+        Nothing
     ]
   where
     x = 0 :: Float
@@ -44,13 +44,13 @@ testStd =
 testGaussianPDF :: [Assertion]
 testGaussianPDF =
     [ assertEqual
-        "gaussianPDF -> Nothing"
-        (gaussianPDF mu sigma x)
-        Nothing
-    , assertEqual
         "gaussianPDF -> Just _"
         (gaussianPDF mu sigma' x)
         (Just 0.24197073 :: Maybe Float)
+    , assertEqual
+        "gaussianPDF -> Nothing"
+        (gaussianPDF mu sigma x)
+        Nothing
     ]
   where
     mu = 10 :: Float
@@ -61,13 +61,13 @@ testGaussianPDF =
 testAutoGPDF :: [Assertion]
 testAutoGPDF =
     [ assertEqual
-        "autoGPDF -> Nothing"
-        (autoGPDF [1 :: Float])
-        Nothing
-    , assertEqual
         "autoGPDF -> Just _"
         (autoGPDF xs)
         (Just ys)
+    , assertEqual
+        "autoGPDF -> Nothing"
+        (autoGPDF [1 :: Float])
+        Nothing
     ]
   where
     xs =
