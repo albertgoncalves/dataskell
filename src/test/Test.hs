@@ -4,7 +4,6 @@ module Main where
 
 import Test.HUnit (assertEqual, Counts, runTestTT, Test(TestCase, TestList))
 import Test.HUnit.Lang (Assertion)
-
 import GaussianPDF (autoGPDF, gaussianPDF, mean, std)
 
 testMean :: [Assertion]
