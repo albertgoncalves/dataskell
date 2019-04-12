@@ -1,5 +1,7 @@
 {-# OPTIONS_GHC -Wall #-}
 
+module GaussianPDF where
+
 import Text.Printf (printf)
 
 mean :: (Integral a, Floating b) => a -> [b] -> Maybe b
@@ -15,9 +17,10 @@ std n d xs = sqrt <$> (mean n xs >>= \mean' -> mean (n - d) $ map (f mean') xs)
   where
     f x = (** 2) . (x -)
 
-gaussianPDF :: (Eq a, Floating a) => a -> a -> a -> Maybe a
-gaussianPDF _ 0 _ = Nothing
-gaussianPDF mu sigma x = Just $ (1 / denom) * expon
+gaussianPDF :: (Eq a, Ord a, Floating a) => a -> a -> a -> Maybe a
+gaussianPDF mu sigma x
+    | sigma <= 0 = Nothing
+    | otherwise = Just $ (1 / denom) * expon
   where
     sigma' = sigma ** 2
     expon = (exp . negate) $ ((x - mu) ** 2) / (sigma' * 2)
@@ -26,7 +29,7 @@ gaussianPDF mu sigma x = Just $ (1 / denom) * expon
 {- $ R
    > xs = ...
    > dnorm(xs, mean(xs), sd(xs)) -}
-autoGPDF:: (Eq a, Floating a) => [a] -> Maybe [a]
+autoGPDF:: (Eq a, Ord a, Floating a) => [a] -> Maybe [a]
 autoGPDF xs =
     mean n xs
     >>= \mu -> std n 1 xs
@@ -40,7 +43,7 @@ pipeline =
     . maybe "Nothing" (unlines . map f)
     . autoGPDF
   where
-    f = printf "%.8f"
+    f = printf "%.9f"
 
 main :: IO ()
 main = pipeline xs
