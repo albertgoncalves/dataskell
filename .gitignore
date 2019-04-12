@@ -2,6 +2,6 @@
 !shell.nix
 !.gitignore
 !src/
-!test/
+!test
 !*.hs
 !*.sh
