@@ -5,17 +5,9 @@ module Payload where
 import Control.Monad (zipWithM)
 import Data.List (partition, transpose)
 import Data.Maybe (listToMaybe)
-import GaussianPDF (gaussianPDF, mean, std)
+import GaussianPDF (applyGPDF)
 import Prelude hiding (lookup)
-import Utils (mapTuple, seqTuple)
-
-applyGPDF :: (Ord a, Floating a) => a -> [a] -> Maybe a
-applyGPDF x xs =
-    mean n xs
-    >>= \mu -> std n 1 xs
-    >>= \sigma -> gaussianPDF mu sigma x
-  where
-    n = length xs
+import Utils (equalLength, mapTuple, seqTuple)
 
 transform :: (Ord a, Floating a) => [a] -> [([a], b)] -> Maybe (a, b)
 transform x = seqTuple . (\(a, b) -> (f x a, listToMaybe b)) . unzip
@@ -34,7 +26,7 @@ classify
     => [([a], Bool)]
     -> [a]
     -> Maybe a
-classify xs x = f xs
+classify xs x = if equalLength (x:map fst xs) then f xs else Nothing
   where
     f =
         (uncurry probability =<<)
