@@ -19,8 +19,8 @@ stringToData = f . map unpack . splitOn (pack ",") . pack
     f (x:xs) = seqTuple (readMaybe x >>= intToBool, mapM readMaybe xs)
     f _ = Nothing
 
-transform :: ([(Bool, [Float])] -> a) -> IO a
-transform f = f . mapMaybe stringToData . lines <$> getContents
+transform :: ([(Bool, [Float])] -> a) -> String -> a
+transform f = f . mapMaybe stringToData . lines
 
 main :: IO ()
-main = transform id >>= mapM_ print
+main = getContents >>= mapM_ print . transform id

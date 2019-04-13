@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -Wall #-}
 
-module Payload where
+module NaiveGaussian where
 
 import Control.Monad (zipWithM)
 import Data.List (partition, transpose)
