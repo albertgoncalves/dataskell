@@ -9,13 +9,15 @@ import GaussianPDF (applyGPDF)
 import Prelude hiding (lookup)
 import Utils (equalLength, mapTuple, seqTuple)
 
-transform :: (Ord a, Floating a) => [a] -> [(b, [a])] -> Maybe (b, a)
-transform x = seqTuple . (\(b, a) -> (listToMaybe b, f x a)) . unzip
+train
+    :: (Floating a)
+    => (a -> [a] -> Maybe a)
+    -> [a]
+    -> [(b, [a])]
+    -> Maybe (b, a)
+train f x = seqTuple . (\(b, a) -> (listToMaybe b, f' x a)) . unzip
   where
-    f :: (Ord a, Floating a) => [a] -> [[a]] -> Maybe a
-    f x' =
-        (exp . sum . map log <$>)
-        . (zipWithM (flip applyGPDF) x' . transpose)
+    f' x' = (exp . sum . map log <$>) . (zipWithM f x' . transpose)
 
 probability :: (Eq a, Floating a) => (Bool, a) -> (Bool, a) -> Maybe a
 probability (True, x) (False, y) = Just $ x / (x + y)
@@ -24,20 +26,21 @@ probability (_, 0) (_, 0) = Nothing
 probability _ _ = Nothing
 
 classify
-    :: (Eq a, Ord a, Floating a)
-    => [(Bool, [a])]
+    :: (Floating a, Ord a)
+    => (a -> [a] -> Maybe a)
+    -> [(Bool, [a])]
     -> [a]
     -> Maybe a
-classify xs x = if equalLength (x:map snd xs) then f xs else Nothing
+classify f xs x = if equalLength (x:map snd xs) then f' xs else Nothing
   where
-    f =
+    f' =
         (uncurry probability =<<)
         . seqTuple
-        . mapTuple (transform x)
+        . mapTuple (train f x)
         . partition fst
 
 main :: IO ()
-main = (print . classify xs) (snd x)
+main = (print . classify (flip applyGPDF) xs) (snd x)
   where
     xs =
         [ (True, [0.62657841, 16.849859])

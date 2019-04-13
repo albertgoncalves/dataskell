@@ -17,7 +17,7 @@ std n d xs = sqrt <$> (mean n xs >>= \mean' -> mean (n - d) $ map (f mean') xs)
   where
     f x = (** 2) . (x -)
 
-gaussianPDF :: (Eq a, Ord a, Floating a) => a -> a -> a -> Maybe a
+gaussianPDF :: (Floating a, Ord a) => a -> a -> a -> Maybe a
 gaussianPDF mu sigma x
     | sigma <= 0 = Nothing
     | otherwise = Just $ (1 / denom) * expon
@@ -37,7 +37,7 @@ applyGPDF xs x =
 {- $ R
    > xs = ...
    > dnorm(xs, mean(xs), sd(xs)) -}
-autoGPDF:: (Eq a, Ord a, Floating a) => [a] -> Maybe [a]
+autoGPDF:: (Ord a, Floating a) => [a] -> Maybe [a]
 autoGPDF xs = mapM (applyGPDF xs) xs
 
 pipeline :: [Float] -> IO ()
