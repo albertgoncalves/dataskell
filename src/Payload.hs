@@ -2,61 +2,58 @@
 
 module Payload where
 
-import Data.Function (on)
-import Data.List (groupBy, sortBy)
+import Control.Monad (zipWithM)
+import Data.List (partition, transpose)
 import Data.Maybe (listToMaybe)
-import GaussianPDF (mean, std)
+import GaussianPDF (gaussianPDF, mean, std)
+import Prelude hiding (lookup)
 import Utils (mapTuple, seqTuple)
 
-meanStd :: Floating a => [a] -> Maybe (a, a)
-meanStd xs = (,) <$> mean n xs <*> std n 1 xs
+applyGPDF :: (Ord a, Floating a) => a -> [a] -> Maybe a
+applyGPDF x xs =
+    mean n xs
+    >>= \mu -> std n 1 xs
+    >>= \sigma -> gaussianPDF mu sigma x
   where
     n = length xs
 
-pipeline
-    :: Floating a
-    => [((a, a), Bool)]
-    -> Maybe [(((a, a), (a, a)), Bool)]
-pipeline =
-    mapM (uncurry f . unzip)
-    . groupBy ((==) `on` snd)
-    . sortBy (compare `on` snd)
+transform :: (Ord a, Floating a) => [a] -> [([a], b)] -> Maybe (a, b)
+transform x = seqTuple . (\(a, b) -> (f x a, listToMaybe b)) . unzip
   where
-    f a b = (,) <$> seqTuple (mapTuple meanStd $ unzip a) <*> listToMaybe b
+    f :: (Ord a, Floating a) => [a] -> [[a]] -> Maybe a
+    f x' xs = exp . sum . map log <$> (zipWithM applyGPDF x' . transpose) xs
+
+probability :: (Eq a, Floating a) => (a, Bool) -> (a, Bool) -> Maybe a
+probability (x, True) (y, False) = Just $ x / (x + y)
+probability (y, False) (x, True) = Just $ x / (x + y)
+probability (0, _) (0, _) = Nothing
+probability _ _ = Nothing
+
+classify
+    :: (Eq a, Ord a, Floating a)
+    => [([a], Bool)]
+    -> [a]
+    -> Maybe a
+classify xs x = f xs
+  where
+    f =
+        (uncurry probability =<<)
+        . seqTuple
+        . mapTuple (transform x)
+        . partition snd
 
 main :: IO ()
-main = (print . pipeline) xs
+main = (print . classify xs) (fst x)
   where
     xs =
-        [ ((1.62711933, 19.17994), True)
-        , ((0.10916089, 11.02794), False)
-        , ((-1.77330493, 18.43419), True)
-        , ((0.02429435, -1.9271), True)
-        , ((-0.41945872, -0.9709209), True)
-        , ((0.07085699, 2.405004), True)
-        , ((-1.08370374, 13.10275), False)
-        , ((0.74712842, 6.512613), True)
-        , ((0.21447752, 16.88026), False)
-        , ((-1.78036075, 20.43487), True)
-        ] :: [((Float, Float), Bool)]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        [ ([0.62657841, 16.849859], True)
+        , ([-0.03280966, 16.791390], True)
+        , ([0.88748101, 4.655336], True)
+        , ([0.65862394, 8.828321], True)
+        , ([5.304892, -7.1470574], False)
+        , ([1.114964, -0.3882628], False)
+        , ([20.660083, 7.2656835], False)
+        , ([26.430639, -6.6080169], False)
+        , ([40.653835, -1.2885520], False)
+        ] :: [([Float], Bool)]
+    x = ([1.76782283, 7.797349], True) :: ([Float], Bool)

@@ -7,6 +7,5 @@ import Data.Function (on)
 mapTuple :: (a -> b) -> (a, a) -> (b, b)
 mapTuple = uncurry . on (,)
 
-seqTuple :: (Maybe a, Maybe b) -> Maybe (a, b)
-seqTuple (Just x, Just y) = Just (x, y)
-seqTuple _ = Nothing
+seqTuple :: Monad m => (m a, m b) -> m (a, b)
+seqTuple (a, b) = a >>= \a' -> (,) a' <$> b
