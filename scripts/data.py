@@ -16,11 +16,18 @@ def extract(xyz):
    return {"Bool": xyz[1], "x": xyz[0].T[0], "y": xyz[0].T[1]}
 
 
+def export(handle):
+    def f(df):
+        filename = "{}/data/{}.csv".format(environ["WD"], handle)
+        df.to_csv(filename, index=False)
+    return f
+
+
 def main():
     pipe( make_circles()
         , extract
         , DataFrame
-        , lambda df: df.to_csv("{}/data/circles.csv".format(environ["WD"]))
+        , export("circles")
         )
 
 

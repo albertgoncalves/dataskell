@@ -25,13 +25,17 @@ probability (False, y) (True, x) = Just $ x / (x + y)
 probability (_, 0) (_, 0) = Nothing
 probability _ _ = Nothing
 
+validate :: [[a]] -> Bool
+validate xs@(x:_) = equalLength xs && not (null x)
+validate [] = False
+
 classify
     :: (Floating a, Ord a)
     => (a -> [a] -> Maybe a)
     -> [(Bool, [a])]
     -> [a]
     -> Maybe a
-classify f xs x = if equalLength (x:map snd xs) then f' xs else Nothing
+classify f xs x = if validate (x:map snd xs) then f' xs else Nothing
   where
     f' =
         (uncurry probability =<<)
