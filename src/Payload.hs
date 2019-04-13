@@ -13,7 +13,9 @@ transform :: (Ord a, Floating a) => [a] -> [([a], b)] -> Maybe (a, b)
 transform x = seqTuple . (\(a, b) -> (f x a, listToMaybe b)) . unzip
   where
     f :: (Ord a, Floating a) => [a] -> [[a]] -> Maybe a
-    f x' xs = exp . sum . map log <$> (zipWithM applyGPDF x' . transpose) xs
+    f x' =
+        (exp . sum . map log <$>)
+        . (zipWithM (flip applyGPDF) x' . transpose)
 
 probability :: (Eq a, Floating a) => (a, Bool) -> (a, Bool) -> Maybe a
 probability (x, True) (y, False) = Just $ x / (x + y)
