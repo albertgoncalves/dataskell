@@ -8,6 +8,7 @@ with pkgs; mkShell {
             pkgs.HUnit
         ]))
         (python37.withPackages(ps: with ps; [
+            flake8
             matplotlib
             pandas
             scikitlearn

@@ -12,3 +12,4 @@ for x in bin/ data/; do
 done
 
 export WD=$(pwd)
+alias flake8="flake8 --ignore 'E111,E124,E128,E201,E203'"
