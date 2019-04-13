@@ -1,7 +1,11 @@
 *
-!shell.nix
 !.gitignore
+!shell.nix
+!.shellhook
 !src/
+!scripts/
+!data/
 !test
 !*.hs
 !*.sh
+!*.py

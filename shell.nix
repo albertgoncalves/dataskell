@@ -7,14 +7,13 @@ with pkgs; mkShell {
             pkgs.hoogle
             pkgs.HUnit
         ]))
+        (python37.withPackages(ps: with ps; [
+            matplotlib
+            pandas
+            scikitlearn
+        ]))
     ];
     shellHook = ''
-        if [ $(uname -s) = "Darwin" ]; then
-            alias ls='ls --color=auto'
-            alias ll='ls -al'
-        fi
-        if [ ! -d bin/ ]; then
-            mkdir bin/
-        fi
+        . .shellhook
     '';
 }
