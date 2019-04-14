@@ -2,9 +2,8 @@
 
 module Main where
 
-import GaussianPDF (applyGPDF)
+import Math (applyGPDF, classify)
 import Grid (bounds, twoDim)
-import NaiveGaussian (classify)
 import Parse (transform)
 
 classifyGrid :: Float -> [(Bool, [Float])] -> Maybe [(Float, [Float])]
