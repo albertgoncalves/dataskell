@@ -2,5 +2,5 @@
 
 set -e
 
-ghc src/test/Test.hs src/Utils.hs src/Math.hs -o bin/Test
+ghc src/test/Test.hs src/Tuple.hs src/Math.hs -o bin/Test
 bin/Test
