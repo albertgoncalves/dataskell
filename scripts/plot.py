@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from sys import argv
+
 from matplotlib.pyplot import close, savefig, subplots, tight_layout
 from pandas import read_csv
 
@@ -19,10 +21,13 @@ def export_plot():
 
 
 def main():
-    input_ = read_csv(path("data", "input.csv"))
-    output = read_csv(path("data", "output.csv"), header=None)
-    render_plot(input_, output)
-    export_plot()
+    try:
+        input_ = read_csv(path("data", "input.csv"))
+        output = read_csv(path("data", "output.csv"), header=None)
+        render_plot(input_, output)
+        export_plot()
+    except:
+        exit("{} unable to plot data".format(argv[0]))
 
 
 if __name__ == "__main__":
