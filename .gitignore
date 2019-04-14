@@ -6,6 +6,7 @@
 !scripts/
 !data/
 !test
+!main
 !*.hs
 !*.sh
 !*.py
