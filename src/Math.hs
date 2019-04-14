@@ -24,8 +24,8 @@ gaussianPDF mu sigma x
     expon = (exp . negate) $ ((x - mu) ** 2) / (sigma' * 2)
     denom = sqrt (2 * pi * sigma')
 
-applyGPDF :: (Floating a, Ord a) => [a] -> a -> Maybe a
-applyGPDF xs x =
+applyGPDF :: (Floating a, Ord a) => a -> [a] -> Maybe a
+applyGPDF x xs =
     mean n xs
     >>= \mu -> std n 1 xs
     >>= \sigma -> gaussianPDF mu sigma x
@@ -36,4 +36,4 @@ applyGPDF xs x =
    > xs = ...
    > dnorm(xs, mean(xs), sd(xs)) -}
 autoGPDF:: (Ord a, Floating a) => [a] -> Maybe [a]
-autoGPDF xs = mapM (applyGPDF xs) xs
+autoGPDF xs = mapM (flip applyGPDF xs) xs

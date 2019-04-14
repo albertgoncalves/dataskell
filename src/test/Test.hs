@@ -65,22 +65,22 @@ testApplyGPDF =
            > xs = c(1, 2, 3, 4, 5)
            > dnorm(2.5, mean(xs), sd(xs)) -}
         "applyGPDF -> Just _"
-        (applyGPDF [1 .. 5] (2.5 :: Float))
+        (applyGPDF (2.5 :: Float) [1 .. 5])
         (Just 0.2400078)
     , assertEqual
         {- $ R
            > xs = c(1, 2)
            > dnorm(1.5, mean(xs), sd(xs)) -}
         "applyGPDF -> Just _"
-        (applyGPDF [1, 2] (1.5 :: Float))
+        (applyGPDF (1.5 :: Float) [1, 2])
         (Just 0.5641896)
     , assertEqual
         "applyGPDF -> Nothing"
-        (applyGPDF [1] (2.5 :: Float))
+        (applyGPDF (2.5 :: Float) [1])
         Nothing
     , assertEqual
         "applyGPDF -> Nothing"
-        (applyGPDF [] (2.5 :: Float))
+        (applyGPDF (2.5 :: Float) [])
         Nothing
     ]
 
@@ -128,23 +128,23 @@ testTrain =
         {- $ R
            > xs = c(-1, 1)
            > dnorm(2.5, mean(xs), sd(xs)) -}
-        (train (flip applyGPDF) [0 :: Float] [(False, [-1]), (False, [1])])
+        (train applyGPDF [0 :: Float] [(False, [-1]), (False, [1])])
         (Just (False, 0.2820948))
     , assertEqual
         "train -> Nothing"
-        (train (flip applyGPDF) [0 :: Float] [(False, [-1])])
+        (train applyGPDF [0 :: Float] [(False, [-1])])
         Nothing
     , assertEqual
         "train -> Nothing"
-        (train (flip applyGPDF) ([] :: [Float]) [(False, [-1])])
+        (train applyGPDF ([] :: [Float]) [(False, [-1])])
         Nothing
     , assertEqual
         "train -> Nothing"
-        (train (flip applyGPDF) [0 :: Float] [(False, [])])
+        (train applyGPDF [0 :: Float] [(False, [])])
         Nothing
     , assertEqual
         "train -> Nothing"
-        (train (flip applyGPDF) ([] :: [Float]) [(False, [])])
+        (train applyGPDF ([] :: [Float]) [(False, [])])
         Nothing
     ]
 
@@ -152,15 +152,15 @@ testClassify :: [Assertion]
 testClassify =
     [ assertEqual
         "classify -> Just _"
-        (classify (flip applyGPDF) [0 :: Float] xs)
+        (classify applyGPDF [0 :: Float] xs)
         (Just 0.119202904)
     , assertEqual
         "classify -> Just _"
-        (classify (flip applyGPDF) [2 :: Float] xs)
+        (classify applyGPDF [2 :: Float] xs)
         (Just 0.99752736)
     , assertEqual
         "classify -> Nothing"
-        (classify (flip applyGPDF) [0 :: Float] (take 2 xs))
+        (classify applyGPDF [0 :: Float] (take 2 xs))
         Nothing
     ]
   where

@@ -33,6 +33,6 @@ classifyGrid f k xs =
     >>= \ys' -> Just (zip ys' xs')
 
 main :: IO ()
-main = getContents >>= mapM_ f . transform (classifyGrid (flip applyGPDF) 25)
+main = getContents >>= mapM_ f . transform (classifyGrid applyGPDF 25)
   where
     f = putStrLn . unlines . map dataToString
