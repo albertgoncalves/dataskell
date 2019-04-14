@@ -32,7 +32,8 @@ def main():
             , export(path("data", "input.csv"))
             )
     except:
-        exit("{} unknown argument, valid arguments: {}".format(argv[0], "|".join(ARGS.keys())))
+        args = (argv[0], "|".join(ARGS.keys()))
+        exit("{} unknown argument, valid arguments: {}".format(*args))
 
 
 if __name__ == "__main__":
