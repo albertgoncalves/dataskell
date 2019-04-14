@@ -26,20 +26,22 @@ train
     -> [a]
     -> [(b, [a])]
     -> Maybe (b, a)
-train f x = seqTuple . (\(b, a) -> (listToMaybe b, f' x a)) . unzip
+train f x xs =
+    if validate (x:map snd xs) then
+        (seqTuple . (\(b, a) -> (listToMaybe b, f' x a)) . unzip) xs
+    else
+        Nothing
   where
     f' x' = (exp . sum . map log <$>) . (zipWithM f x' . transpose)
 
 classify
     :: (Floating a, Ord a)
     => (a -> [a] -> Maybe a)
-    -> [(Bool, [a])]
     -> [a]
+    -> [(Bool, [a])]
     -> Maybe a
-classify f xs x = if validate (x:map snd xs) then f' xs else Nothing
-  where
-    f' =
-        (uncurry ratioTrue =<<)
-        . seqTuple
-        . mapTuple (train f x)
-        . partition fst
+classify f x =
+    (uncurry ratioTrue =<<)
+    . seqTuple
+    . mapTuple (train f x)
+    . partition fst

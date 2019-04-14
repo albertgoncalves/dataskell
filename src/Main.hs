@@ -29,10 +29,10 @@ classifyGrid
     -> Maybe [(a, [a])]
 classifyGrid f k xs =
     (twoDim . bounds k . map snd) xs
-    >>= \xs' -> mapM (classify f xs) xs'
+    >>= \xs' -> mapM (flip (classify f) xs) xs'
     >>= \ys' -> Just (zip ys' xs')
 
 main :: IO ()
-main = getContents >>= mapM_ f . transform (classifyGrid (flip applyGPDF) 50)
+main = getContents >>= mapM_ f . transform (classifyGrid (flip applyGPDF) 25)
   where
     f = putStrLn . unlines . map dataToString

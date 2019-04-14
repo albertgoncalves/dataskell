@@ -10,8 +10,9 @@ from utils import path
 
 def render_plot(input_, output):
     _, ax = subplots()
-    ax.tricontourf(output[1], output[2], output[0], cmap="bwr", alpha=0.75)
-    ax.scatter(input_.x, input_.y, c=input_.Bool, cmap="bwr", edgecolor="w")
+    kwargs = {"cmap": "bwr", "vmin": 0, "vmax": 1}
+    ax.tricontourf(output[1], output[2], output[0], alpha=0.75, **kwargs)
+    ax.scatter(input_.x, input_.y, c=input_.Bool, edgecolor="w", **kwargs)
 
 
 def export_plot(path):

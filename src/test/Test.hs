@@ -4,7 +4,8 @@ module Main where
 
 import Test.HUnit (assertEqual, Counts, runTestTT, Test(TestCase, TestList))
 import Test.HUnit.Lang (Assertion)
-import Math (autoGPDF, gaussianPDF, mean, std)
+import Math (applyGPDF, autoGPDF, gaussianPDF, mean, std)
+import Model (classify, train)
 
 testMean :: [Assertion]
 testMean =
@@ -57,6 +58,32 @@ testGaussianPDF =
     sigma' = 1 :: Float
     x = 9 :: Float
 
+testApplyGPDF :: [Assertion]
+testApplyGPDF =
+    [ assertEqual
+        {- $ R
+           > xs = c(1, 2, 3, 4, 5)
+           > dnorm(2.5, mean(xs), sd(xs)) -}
+        "applyGPDF -> Just _"
+        (applyGPDF [1 .. 5] (2.5 :: Float))
+        (Just 0.2400078)
+    , assertEqual
+        {- $ R
+           > xs = c(1, 2)
+           > dnorm(1.5, mean(xs), sd(xs)) -}
+        "applyGPDF -> Just _"
+        (applyGPDF [1, 2] (1.5 :: Float))
+        (Just 0.5641896)
+    , assertEqual
+        "applyGPDF -> Nothing"
+        (applyGPDF [1] (2.5 :: Float))
+        Nothing
+    , assertEqual
+        "applyGPDF -> Nothing"
+        (applyGPDF [] (2.5 :: Float))
+        Nothing
+    ]
+
 testAutoGPDF :: [Assertion]
 testAutoGPDF =
     [ assertEqual
@@ -94,6 +121,51 @@ testAutoGPDF =
         , 0.363553300
         ] :: [Float]
 
+testTrain :: [Assertion]
+testTrain =
+    [ assertEqual
+        "train -> Just _"
+        {- $ R
+           > xs = c(-1, 1)
+           > dnorm(2.5, mean(xs), sd(xs)) -}
+        (train (flip applyGPDF) [0 :: Float] [(False, [-1]), (False, [1])])
+        (Just (False, 0.2820948))
+    , assertEqual
+        "train -> Nothing"
+        (train (flip applyGPDF) [0 :: Float] [(False, [-1])])
+        Nothing
+    , assertEqual
+        "train -> Nothing"
+        (train (flip applyGPDF) ([] :: [Float]) [(False, [-1])])
+        Nothing
+    , assertEqual
+        "train -> Nothing"
+        (train (flip applyGPDF) [0 :: Float] [(False, [])])
+        Nothing
+    , assertEqual
+        "train -> Nothing"
+        (train (flip applyGPDF) ([] :: [Float]) [(False, [])])
+        Nothing
+    ]
+
+testClassify :: [Assertion]
+testClassify =
+    [ assertEqual
+        "classify -> Just _"
+        (classify (flip applyGPDF) [0 :: Float] xs)
+        (Just 0.119202904)
+    , assertEqual
+        "classify -> Just _"
+        (classify (flip applyGPDF) [2 :: Float] xs)
+        (Just 0.99752736)
+    , assertEqual
+        "classify -> Nothing"
+        (classify (flip applyGPDF) [0 :: Float] (take 2 xs))
+        Nothing
+    ]
+  where
+    xs = [(False, [-1]), (True, [1]), (False, [0]), (True, [2])]
+
 main :: IO Counts
 main = (runTestTT . TestList . map TestCase) tests
   where
@@ -101,4 +173,7 @@ main = (runTestTT . TestList . map TestCase) tests
         testMean
         ++ testStd
         ++ testGaussianPDF
+        ++ testApplyGPDF
         ++ testAutoGPDF
+        ++ testTrain
+        ++ testClassify

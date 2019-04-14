@@ -2,5 +2,7 @@
 
 set -e
 
-ghc src/test/Test.hs src/Tuple.hs src/Math.hs -o bin/Test
+ghc \
+    src/Tuple.hs src/Math.hs src/Model.hs src/test/Test.hs \
+    -o bin/Test
 bin/Test
