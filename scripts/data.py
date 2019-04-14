@@ -9,7 +9,7 @@ from utils import path, pipe
 
 
 def extract(xyz):
-   return {"Bool": xyz[1], "x": xyz[0].T[0], "y": xyz[0].T[1]}
+   return {"z": xyz[1], "x": xyz[0].T[0], "y": xyz[0].T[1]}
 
 
 def export(filename):

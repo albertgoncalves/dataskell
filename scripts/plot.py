@@ -11,8 +11,9 @@ from utils import path
 def render_plot(input_, output):
     _, ax = subplots()
     kwargs = {"cmap": "bwr", "vmin": 0, "vmax": 1}
-    ax.tricontourf(output[1], output[2], output[0], alpha=0.75, **kwargs)
-    ax.scatter(input_.x, input_.y, c=input_.Bool, edgecolor="w", **kwargs)
+    ax.tricontourf(output.x, output.y, output.z, alpha=0.75, **kwargs)
+    ax.scatter(input_.x, input_.y, c=input_.z, edgecolor="w", **kwargs)
+    ax.set_aspect("equal")
 
 
 def export_plot(path):
@@ -24,7 +25,10 @@ def export_plot(path):
 def main():
     try:
         input_ = read_csv(path("data", "input.csv"))
-        output = read_csv(path("data", "output.csv"), header=None)
+        output = read_csv( path("data", "output.csv")
+                         , header=None
+                         , names=["z", "x", "y"]
+                         )
         render_plot(input_, output)
         export_plot(path("pngs", "plot.png"))
     except:
