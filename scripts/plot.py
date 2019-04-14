@@ -8,7 +8,7 @@ from utils import path
 
 def render_plot(input_, output):
     _, ax = subplots()
-    ax.scatter(output[1], output[2], c=output[0], marker="s", cmap="coolwarm")
+    ax.tricontourf(output[1], output[2], output[0], cmap="bwr", alpha=0.75)
     ax.scatter(input_.x, input_.y, c=input_.Bool, cmap="bwr", edgecolor="w")
 
 

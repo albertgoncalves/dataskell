@@ -32,6 +32,6 @@ classifyGrid k xs =
     >>= \ys' -> Just (zip ys' xs')
 
 main :: IO ()
-main = getContents >>= mapM_ f . transform (classifyGrid 100)
+main = getContents >>= mapM_ f . transform (classifyGrid 50)
   where
     f = putStrLn . unlines . map dataToString
