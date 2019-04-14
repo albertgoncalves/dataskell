@@ -14,8 +14,8 @@ def render_plot(input_, output):
     ax.scatter(input_.x, input_.y, c=input_.Bool, cmap="bwr", edgecolor="w")
 
 
-def export_plot():
-    savefig(path("pngs", "plot.png"))
+def export_plot(path):
+    savefig(path)
     tight_layout()
     close()
 
@@ -25,7 +25,7 @@ def main():
         input_ = read_csv(path("data", "input.csv"))
         output = read_csv(path("data", "output.csv"), header=None)
         render_plot(input_, output)
-        export_plot()
+        export_plot(path("pngs", "plot.png"))
     except:
         exit("{} unable to plot data".format(argv[0]))
 
