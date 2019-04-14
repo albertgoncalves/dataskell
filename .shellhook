@@ -5,11 +5,11 @@ if [ $(uname -s) = "Darwin" ]; then
     alias ll='ls -al'
 fi
 
-for x in bin/ data/; do
+for x in bin/ data pngs/; do
     if [ ! -d $x ]; then
-        mkdir $x
+        mkdir -p $x
     fi
 done
 
 export WD=$(pwd)
-alias flake8="flake8 --ignore 'E111,E124,E128,E201,E203'"
+alias flake8="flake8 --ignore \"E111,E124,E128,E201,E203,E722\""
