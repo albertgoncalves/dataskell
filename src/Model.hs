@@ -26,11 +26,10 @@ train
     -> [a]
     -> [(b, [a])]
     -> Maybe (b, a)
-train f x xs =
-    if validate (x:map snd xs) then
-        (seqTuple . (\(b, a) -> (listToMaybe b, f' x a)) . unzip) xs
-    else
-        Nothing
+train f x xs
+    | validate (x:map snd xs) =
+        (seqTuple . (\(b, xs') -> (listToMaybe b, f' x xs')) . unzip) xs
+    | otherwise = Nothing
   where
     f' x' = (exp . sum . map log <$>) . (zipWithM f x' . transpose)
 
