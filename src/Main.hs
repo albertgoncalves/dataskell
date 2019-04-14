@@ -23,15 +23,16 @@ twoDim _ = Nothing
 
 classifyGrid
     :: (Enum a, Floating a, Ord a)
-    => a
+    => (a -> [a] -> Maybe a)
+    -> a
     -> [(Bool, [a])]
     -> Maybe [(a, [a])]
-classifyGrid k xs =
+classifyGrid f k xs =
     (twoDim . bounds k . map snd) xs
-    >>= \xs' -> mapM (classify (flip applyGPDF) xs) xs'
+    >>= \xs' -> mapM (classify f xs) xs'
     >>= \ys' -> Just (zip ys' xs')
 
 main :: IO ()
-main = getContents >>= mapM_ f . transform (classifyGrid 50)
+main = getContents >>= mapM_ f . transform (classifyGrid (flip applyGPDF) 50)
   where
     f = putStrLn . unlines . map dataToString
