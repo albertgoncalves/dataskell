@@ -36,4 +36,4 @@ applyGPDF x xs =
    > xs = ...
    > dnorm(xs, mean(xs), sd(xs)) -}
 autoGPDF:: (Ord a, Floating a) => [a] -> Maybe [a]
-autoGPDF xs = mapM (flip applyGPDF xs) xs
+autoGPDF xs = mapM (`applyGPDF` xs) xs
