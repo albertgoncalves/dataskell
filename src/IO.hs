@@ -1,11 +1,12 @@
 {-# OPTIONS_GHC -Wall #-}
 
-module Parse where
+module IO where
 
-import Data.Text (pack, splitOn, unpack)
+import Data.List (intercalate)
 import Data.Maybe (mapMaybe)
+import Data.Text (pack, splitOn, unpack)
 import Text.Read (readMaybe)
-import Utils (seqTuple)
+import Tuple (seqTuple)
 
 intToBool :: Int -> Maybe Bool
 intToBool 0 = Just False
@@ -19,8 +20,8 @@ stringToData = f . map unpack . splitOn (pack ",") . pack
     f (x:xs) = seqTuple (readMaybe x >>= intToBool, mapM readMaybe xs)
     f _ = Nothing
 
-transform :: ([(Bool, [Float])] -> a) -> String -> a
-transform f = f . mapMaybe stringToData . lines
+dataToString :: (Float, [Float]) -> String
+dataToString (x, xs) = (intercalate "," . map show) (x:xs)
 
-main :: IO ()
-main = getContents >>= mapM_ print . transform id
+transform :: ([(Bool, [Float])] -> a) -> String -> a
+transform = (. mapMaybe stringToData . lines)
