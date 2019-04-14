@@ -5,7 +5,6 @@ set -e
 ghc \
     src/Tuple.hs src/Math.hs src/Model.hs src/IO.hs src/Main.hs \
     -o bin/Main
-
 python scripts/data.py $1
 cat data/input.csv | bin/Main > data/output.csv
 python scripts/plot.py
