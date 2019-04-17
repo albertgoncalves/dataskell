@@ -11,6 +11,7 @@ view () {
 }
 
 ghc \
+    -O \
     src/Tuple.hs src/Math.hs src/Model.hs src/IO.hs src/Main.hs \
     -o bin/Main
 python scripts/data.py $1
