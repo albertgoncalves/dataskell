@@ -17,4 +17,4 @@ ghc \
 python scripts/data.py $1
 tail -n +2 data/input.csv | bin/Main > data/output.csv
 python scripts/plot.py
-view pngs/plot.png
+view out/plot.png

@@ -30,7 +30,7 @@ def main():
                          , names=["z", "x", "y"]
                          )
         render_plot(input_, output)
-        export_plot(path("pngs", "plot.png"))
+        export_plot(path("out", "plot.png"))
     except:
         exit("{} unable to plot data".format(argv[0]))
 

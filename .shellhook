@@ -7,7 +7,7 @@ else
     alias open="xdg-open"
 fi
 
-for x in bin/ data/ pngs/; do
+for x in bin/ data/ out/; do
     if [ ! -d $x ]; then
         mkdir $x
     fi
