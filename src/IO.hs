@@ -1,5 +1,3 @@
-{-# OPTIONS_GHC -Wall #-}
-
 module IO where
 
 import Data.List (intercalate)
@@ -21,7 +19,7 @@ stringToData = f . map unpack . splitOn (pack ",") . pack
     f _ = Nothing
 
 dataToString :: (Float, [Float]) -> String
-dataToString (x, xs) = (intercalate "," . map show) (x:xs)
+dataToString (x, xs) = (intercalate "," . map show) (x : xs)
 
 transform :: ([(Bool, [Float])] -> a) -> String -> a
 transform = (. mapMaybe stringToData . lines)

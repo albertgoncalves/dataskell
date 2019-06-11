@@ -1,5 +1,3 @@
-{-# OPTIONS_GHC -Wall #-}
-
 module Model where
 
 import Control.Monad (zipWithM)
@@ -20,27 +18,24 @@ validate :: [[a]] -> Bool
 validate xs@(x:_) = equalLength xs && not (null x)
 validate [] = False
 
-train
-    :: (Floating a)
+train ::
+       (Floating a)
     => (a -> [a] -> Maybe a)
     -> [a]
     -> [(b, [a])]
     -> Maybe (b, a)
 train f x xs
-    | validate (x:map snd xs) =
+    | validate (x : map snd xs) =
         (seqTuple . (\(b, xs') -> (listToMaybe b, f' x xs')) . unzip) xs
     | otherwise = Nothing
   where
     f' x' = (exp . sum . map log <$>) . (zipWithM f x' . transpose)
 
-classify
-    :: (Floating a, Ord a)
+classify ::
+       (Floating a, Ord a)
     => (a -> [a] -> Maybe a)
     -> [a]
     -> [(Bool, [a])]
     -> Maybe a
 classify f x =
-    (uncurry ratioTrue =<<)
-    . seqTuple
-    . mapTuple (train f x)
-    . partition fst
+    (uncurry ratioTrue =<<) . seqTuple . mapTuple (train f x) . partition fst

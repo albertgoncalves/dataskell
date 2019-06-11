@@ -13,6 +13,7 @@ view () {
 ghc \
     -O \
     src/Tuple.hs src/Math.hs src/Model.hs src/IO.hs src/Main.hs \
+    -Wall \
     -o bin/Main
 python scripts/data.py $1
 tail -n +2 data/input.csv | bin/Main > data/output.csv

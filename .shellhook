@@ -13,5 +13,13 @@ for x in bin/ data/ out/; do
     fi
 done
 
+lint() {
+    echo $1
+    hlint $1
+    hindent --indent-size 4 --sort-imports --line-length 78 $1
+    echo ""
+}
+
+export -f lint
 export WD=$(pwd)
 alias flake8="flake8 --ignore \"E111,E124,E128,E201,E203,E722\""
