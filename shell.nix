@@ -1,6 +1,6 @@
 { pkgs ? import <nixpkgs> {} }:
 with pkgs; mkShell {
-    name = "Haskell";
+    name = "dataskell";
     buildInputs = [
         (haskell.packages.ghc865.ghcWithPackages (pkgs: [
             pkgs.hindent
