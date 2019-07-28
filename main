@@ -3,10 +3,10 @@
 set -e
 
 view () {
-    if [ $(uname -s) = "Darwin" ]; then
-        open $1
+    if [ "$(uname -s)" = "Darwin" ]; then
+        open "$1"
     else
-        xdg-open $1
+        xdg-open "$1"
     fi
 }
 
@@ -15,7 +15,7 @@ ghc \
     src/Tuple.hs src/Math.hs src/Model.hs src/IO.hs src/Main.hs \
     -Wall \
     -o bin/Main
-python scripts/data.py $1
+python scripts/data.py "$1"
 tail -n +2 data/input.csv | bin/Main > data/output.csv
 python scripts/plot.py
 view out/plot.png

@@ -14,6 +14,7 @@ with pkgs; mkShell {
             pandas
             scikitlearn
         ]))
+        shellcheck
     ];
     shellHook = ''
         . .shellhook
