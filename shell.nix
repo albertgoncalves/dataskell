@@ -1,3 +1,5 @@
+# $ nix-env --query --available --attr nixpkgs.ghc
+
 with import <nixpkgs> {};
 mkShell {
     buildInputs = [
