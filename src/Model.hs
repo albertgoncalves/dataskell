@@ -1,6 +1,7 @@
 module Model where
 
 import Control.Monad (zipWithM)
+import Data.Bifunctor (bimap)
 import Data.List (partition, transpose)
 import Data.Maybe (listToMaybe)
 import Tuple (mapTuple, seqTuple)
@@ -26,7 +27,7 @@ train ::
     -> Maybe (b, a)
 train f x xs
     | validate (x : map snd xs) =
-        (seqTuple . (\(b, xs') -> (listToMaybe b, f' x xs')) . unzip) xs
+        (seqTuple . bimap listToMaybe (f' x) . unzip) xs
     | otherwise = Nothing
   where
     f' x' = (exp . sum . map log <$>) . (zipWithM f x' . transpose)
