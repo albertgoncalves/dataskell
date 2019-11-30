@@ -39,16 +39,15 @@ testGaussianPDF =
     x = 9 :: Float
 
 testApplyGPDF :: [Assertion]
-testApplyGPDF
+testApplyGPDF =
+    [ applyGPDF (2.5 :: Float) [1 .. 5] @=? Just 0.2400078
     {- $ R
        > xs = c(1, 2, 3, 4, 5)
        > dnorm(2.5, mean(xs), sd(xs)) -}
- =
-    [ applyGPDF (2.5 :: Float) [1 .. 5] @=? Just 0.2400078
+    , applyGPDF (1.5 :: Float) [1, 2] @=? Just 0.5641896
     {- $ R
        > xs = c(1, 2)
        > dnorm(1.5, mean(xs), sd(xs)) -}
-    , applyGPDF (1.5 :: Float) [1, 2] @=? Just 0.5641896
     , applyGPDF (2.5 :: Float) [1] @=? Nothing
     , applyGPDF (2.5 :: Float) [] @=? Nothing
     ]
@@ -82,13 +81,12 @@ testAutoGPDF = [autoGPDF xs @=? Just ys, autoGPDF [1 :: Float] @=? Nothing]
         ] :: [Float]
 
 testTrain :: [Assertion]
-testTrain
+testTrain =
+    [ train applyGPDF [0 :: Float] [(False, [-1]), (False, [1])] @=?
+      Just (False, 0.2820948)
     {- $ R
        > xs = c(-1, 1)
        > dnorm(2.5, mean(xs), sd(xs)) -}
- =
-    [ train applyGPDF [0 :: Float] [(False, [-1]), (False, [1])] @=?
-      Just (False, 0.2820948)
     , train applyGPDF [0 :: Float] [(False, [-1])] @=? Nothing
     , train applyGPDF ([] :: [Float]) [(False, [-1])] @=? Nothing
     , train applyGPDF [0 :: Float] [(False, [])] @=? Nothing
